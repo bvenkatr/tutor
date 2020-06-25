@@ -6,6 +6,7 @@ services:
       entrypoint: []
       command: ["echo", "done"]
       depends_on: {{ [("mysql", ACTIVATE_MYSQL)]|list_if }}
+      network_mode: "bridge"
     
     lms-job:
       image: {{ DOCKER_REGISTRY }}{{ DOCKER_IMAGE_OPENEDX }}
@@ -16,6 +17,7 @@ services:
         - ../apps/openedx/settings/lms/:/openedx/edx-platform/lms/envs/tutor/:ro
         - ../apps/openedx/settings/cms/:/openedx/edx-platform/cms/envs/tutor/:ro
         - ../apps/openedx/config/:/openedx/config/:ro
+        network_mode: "bridge"
     
     cms-job:
       image: {{ DOCKER_REGISTRY }}{{ DOCKER_IMAGE_OPENEDX }}
@@ -26,6 +28,7 @@ services:
         - ../apps/openedx/settings/lms/:/openedx/edx-platform/lms/envs/tutor/:ro
         - ../apps/openedx/settings/cms/:/openedx/edx-platform/cms/envs/tutor/:ro
         - ../apps/openedx/config/:/openedx/config/:ro
+        network_mode: "bridge"
     
     forum-job:
       image: {{ DOCKER_REGISTRY }}{{ DOCKER_IMAGE_FORUM }}
@@ -34,5 +37,6 @@ services:
         MONGODB_AUTH: "{% if MONGODB_USERNAME and MONGODB_PASSWORD %}{{ MONGODB_USERNAME}}:{{ MONGODB_PASSWORD }}@{% endif %}"
         MONGODB_HOST: "{{ MONGODB_HOST }}"
         MONGODB_PORT: "{{ MONGODB_PORT }}"
+        network_mode: "bridge"
     
     {{ patch("local-docker-compose-jobs-services")|indent(4) }}

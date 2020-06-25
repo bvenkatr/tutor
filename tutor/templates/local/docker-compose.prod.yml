@@ -5,6 +5,7 @@ services:
     volumes:
       - ../../data/openedx:/var/www/openedx
     command: sh -c "rm -rf /var/www/openedx/staticfiles && cp -r /openedx/staticfiles/ /var/www/openedx/"
+    network_mode: "bridge"
 
   nginx:
     image: {{ DOCKER_REGISTRY }}{{ DOCKER_IMAGE_NGINX }}
@@ -26,5 +27,6 @@ services:
       {% if ACTIVATE_HTTPS %}- ../../data/letsencrypt:/etc/letsencrypt/:ro{% endif %}
       {{ patch("local-docker-compose-nginx-volumes")|indent(6) }}
     depends_on: {{ [("lms", ACTIVATE_LMS), ("cms", ACTIVATE_CMS)]|list_if }}
+    network_mode: "bridge"
 
   {{ patch("local-docker-compose-prod-services")|indent(2) }}
